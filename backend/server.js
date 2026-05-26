@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import {connectDB} from './config/db.js';
 import searchRoutes from './routes/searchRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
+import dishRoutes from './routes/dishRoutes.js';
+import restaurantRoutes from './routes/restaurantRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -20,6 +22,8 @@ connectDB();
 // Routes
 app.use(searchRoutes);
 app.use(reviewRoutes);
+app.use(dishRoutes);
+app.use(restaurantRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
