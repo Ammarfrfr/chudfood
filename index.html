@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khoj Mumbai - Find the best dishes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* CSS Reset and variables */
+:root {
+  --bg-color: #080808;
+  --card-bg: #111111;
+  --primary: #D85A30;
+  --primary-hover: #E86A40;
+  --border: #1E1E1E;
+  --text-primary: #F0F0F0;
+  --text-secondary: #888888;
+  --text-tertiary: #444444;
+  
+  --gold: #FFD700;
+  --silver: #C0C0C0;
+  --bronze: #CD7F32;
+  
+  --score-bg: #1A3320;
+  --score-text: #4AFF9E;
+  
+  --veg: #28a745;
+  --non-veg: #dc3545;
+  
+  --font-main: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(8, 8, 8, 0.7);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo span {
+  color: var(--primary);
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.nav-links a:hover {
+  color: var(--text-primary);
+}
+
+/* Hero Section */
+.hero {
+  padding: 140px 40px 60px;
+  text-align: center;
+  background: radial-gradient(circle at 50% 0%, rgba(216, 90, 48, 0.1) 0%, transparent 50%);
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  background: linear-gradient(to right, #FFF, #AAA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  color: var(--text-secondary);
+  font-size: 18px;
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.search-container {
+  max-width: 640px;
+  margin: 0 auto 16px;
+  position: relative;
+}
+
+.search-bar {
+  width: 100%;
+  height: 56px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 0 24px;
+  font-size: 16px;
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  transition: all 0.3s ease;
+  outline: none;
+}
+.search-bar:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(216, 90, 48, 0.15);
+}
+
+.search-btn {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  height: 44px;
+  padding: 0 20px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 22px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.search-btn:hover {
+  background: var(--primary-hover);
+}
+
+.ai-text {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-bottom: 24px;
+  display: block;
+}
+
+.mood-pills {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mood-pill {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--text-tertiary);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.mood-pill:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Main Content area */
+.main-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px 100px;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 100px;
+}
+
+.filter-section {
+  margin-bottom: 32px;
+}
+
+.filter-header {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #555;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Custom Toggle */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  background: var(--border);
+  border-radius: 10px;
+  transition: 0.2s ease;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.2s ease;
+}
+.toggle.active {
+  background: var(--primary);
+}
+.toggle.active::after {
+  left: 18px;
+}
+
+/* Range Slider */
+.slider-container {
+  margin-bottom: 24px;
+}
+.slider-val {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.slider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Checkboxes */
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.checkbox-item input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--text-tertiary);
+  border-radius: 4px;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+}
+.checkbox-item input:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.checkbox-item input:checked::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Results Content */
+.results-area {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.results-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.sort-select {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  outline: none;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Dish Card */
+.dish-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  position: relative;
+  transition: all 0.2s ease;
+  will-change: transform;
+}
+.dish-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+  border-color: #2F2F2F;
+}
+
+.dish-card.ad-card {
+  border-color: rgba(255, 215, 0, 0.3);
+}
+.ad-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #c9a738;
+  background: rgba(255, 215, 0, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.rank-col {
+  width: 40px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  padding-top: 4px;
+}
+.rank-gold { color: var(--gold); }
+.rank-silver { color: var(--silver); }
+.rank-bronze { color: var(--bronze); }
+
+.img-placeholder {
+  width: 100px;
+  height: 100px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  flex-shrink: 0;
+}
+
+.card-content {
+  flex-grow: 1;
+}
+
+.dish-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.rest-name {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.score-badge {
+  background: var(--score-bg);
+  color: var(--score-text);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.dot-veg {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--veg);
+  display: inline-block;
+}
+.dot-nonveg {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--non-veg);
+  display: inline-block;
+}
+
+.tag {
+  background: #1e1e1e;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.hygiene-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.hygiene-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.hygiene-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  flex-grow: 1;
+  max-width: 200px;
+  overflow: hidden;
+}
+.hygiene-fill {
+  height: 100%;
+  background: var(--score-text);
+  width: 0%;
+  transition: width 1s ease-out;
+}
+
+.action-row {
+  display: flex;
+  gap: 12px;
+}
+.btn-action {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-main);
+}
+.btn-action:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-primary);
+  border-color: #333;
+}
+
+/* Reviews Expandable Section */
+.reviews-section {
+  display: none;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+  animation: fadeIn 0.3s ease;
+}
+.reviews-section.active {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reviews-header {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 24px;
+}
+.aggregate-score {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--score-text);
+  line-height: 1;
+}
+.score-max {
+  font-size: 16px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.star-bars {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.star-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.star-track {
+  height: 4px;
+  background: var(--border);
+  flex-grow: 1;
+  border-radius: 2px;
+}
+.star-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.review-form {
+  background: #151515;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+.form-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.star-selector {
+  font-size: 20px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+.star-selector span:hover, .star-selector span.active {
+  color: var(--gold);
+}
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.form-input {
+  background: var(--bg-color);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  width: 100%;
+  outline: none;
+}
+.form-input:focus {
+  border-color: var(--text-secondary);
+}
+textarea.form-input {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.review-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.review-body {
+  flex-grow: 1;
+}
+.reviewer-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+.review-date {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.review-stars {
+  color: var(--gold);
+  font-size: 12px;
+  margin: 4px 0;
+}
+.review-text {
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: #1a1a1a;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+#skeleton-container {
+  display: none;
+}
+.skeleton-card {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.skel-rank { width: 30px; height: 30px; }
+.skel-img { width: 100px; height: 100px; border-radius: 8px;}
+.skel-title { width: 40%; height: 20px; margin-bottom: 12px; }
+.skel-sub { width: 30%; height: 14px; margin-bottom: 20px; }
+.skel-row { width: 80%; height: 16px; margin-bottom: 20px; }
+.skel-btn { width: 80px; height: 30px; border-radius: 6px; display: inline-block; margin-right: 12px;}
+</style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="#" class="logo">Khoj<span>Mumbai</span></a>
+    <div class="nav-links">
+      <a href="#">Explore</a>
+      <a href="#">Rankings</a>
+      <a href="#">Log in</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Find Mumbai's best dishes, ranked by the crowd</h1>
+    <p>Every review, every restaurant — aggregated into one honest score.</p>
+    
+    <div class="search-container">
+      <input type="text" class="search-bar" id="search-input" placeholder="What are you craving?">
+      <button class="search-btn" id="search-btn">Search ↗</button>
+    </div>
+    <span class="ai-text">AI-powered — describe your mood, craving or occasion</span>
+    
+    <div class="mood-pills">
+      <button class="mood-pill">Light lunch</button>
+      <button class="mood-pill">Street food</button>
+      <button class="mood-pill">Date night</button>
+      <button class="mood-pill">Quick bite</button>
+      <button class="mood-pill">Late night</button>
+      <button class="mood-pill">Healthy</button>
+    </div>
+  </section>
+
+  <main class="main-container">
+    <aside class="sidebar">
+      <div class="filter-section">
+        <div class="filter-header">Preferences</div>
+        <div class="toggle-wrapper">
+          <span>Veg Only</span>
+          <div class="toggle" id="veg-toggle"></div>
+        </div>
+        <div class="toggle-wrapper" style="margin-bottom:0;">
+          <span>Non-Veg Only</span>
+          <div class="toggle" id="nonveg-toggle"></div>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-header">Price Range</div>
+        <div class="slider-container">
+          <div class="slider-val">
+            <span>₹0</span>
+            <span id="price-val">₹2000</span>
+          </div>
+          <input type="range" class="slider" id="price-slider" min="0" max="2000" value="2000">
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-header">Area</div>
+        <div class="checkbox-list" id="area-filters">
+          <label class="checkbox-item"><input type="checkbox" value="Bandra"> Bandra</label>
+          <label class="checkbox-item"><input type="checkbox" value="Andheri"> Andheri</label>
+          <label class="checkbox-item"><input type="checkbox" value="Juhu"> Juhu</label>
+          <label class="checkbox-item"><input type="checkbox" value="Colaba"> Colaba</label>
+          <label class="checkbox-item"><input type="checkbox" value="Dadar"> Dadar</label>
+          <label class="checkbox-item"><input type="checkbox" value="Lower Parel"> Lower Parel</label>
+          <label class="checkbox-item"><input type="checkbox" value="Tardeo"> Tardeo</label>
+        </div>
+      </div>
+      
+      <div class="filter-section">
+        <div class="filter-header">Cuisine</div>
+        <div class="checkbox-list">
+          <label class="checkbox-item"><input type="checkbox"> North Indian</label>
+          <label class="checkbox-item"><input type="checkbox"> Street Food</label>
+          <label class="checkbox-item"><input type="checkbox"> South Indian</label>
+          <label class="checkbox-item"><input type="checkbox"> Chinese</label>
+          <label class="checkbox-item"><input type="checkbox"> Desserts</label>
+        </div>
+      </div>
+    </aside>
+
+    <div class="results-area">
+      <div class="results-header">
+        <div class="results-title">Top dishes near you</div>
+        <select class="sort-select">
+          <option>Sort by: Score</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Hygiene Rating</option>
+        </select>
+      </div>
+
+      <div id="skeleton-container">
+        <!-- Generates 3 skeletons -->
+        <div class="skeleton-card">
+          <div class="skeleton skel-rank"></div>
+          <div class="skeleton skel-img"></div>
+          <div class="card-content">
+            <div class="skeleton skel-title"></div>
+            <div class="skeleton skel-sub"></div>
+            <div class="skeleton skel-row"></div>
+            <div>
+              <div class="skeleton skel-btn"></div>
+              <div class="skeleton skel-btn"></div>
+              <div class="skeleton skel-btn"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skel-rank"></div>
+          <div class="skeleton skel-img"></div>
+          <div class="card-content">
+            <div class="skeleton skel-title"></div>
+            <div class="skeleton skel-sub"></div>
+            <div class="skeleton skel-row"></div>
+            <div>
+              <div class="skeleton skel-btn"></div>
+              <div class="skeleton skel-btn"></div>
+              <div class="skeleton skel-btn"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards-container" id="results-container">
+        <!-- Cards will be populated by JS -->
+      </div>
+    </div>
+  </main>
+
+<script>
+const dishes = [
+  {
+    id: 1,
+    name: "Butter Chicken",
+    restaurant: "Punjab Grill",
+    area: "Bandra",
+    score: 9.4,
+    price: 420,
+    isVeg: false,
+    hygiene: 92,
+    emoji: "🥘",
+    cuisine: "North Indian",
+    ad: true
+  },
+  {
+    id: 2,
+    name: "Vada Pav",
+    restaurant: "Ashok Vada Pav",
+    area: "Dadar",
+    score: 9.1,
+    price: 15,
+    isVeg: true,
+    hygiene: 78,
+    emoji: "🍔",
+    cuisine: "Street Food"
+  },
+  {
+    id: 3,
+    name: "Pav Bhaji",
+    restaurant: "Sardar",
+    area: "Tardeo",
+    score: 9.0,
+    price: 120,
+    isVeg: true,
+    hygiene: 85,
+    emoji: "🍲",
+    cuisine: "Street Food"
+  },
+  {
+    id: 4,
+    name: "Seekh Kebab",
+    restaurant: "Bade Miyan",
+    area: "Colaba",
+    score: 8.8,
+    price: 280,
+    isVeg: false,
+    hygiene: 80,
+    emoji: "🍢",
+    cuisine: "North Indian"
+  },
+  {
+    id: 5,
+    name: "Modak",
+    restaurant: "Shree Siddhivinayak Prasad",
+    area: "Dadar",
+    score: 8.7,
+    price: 60,
+    isVeg: true,
+    hygiene: 95,
+    emoji: "🥟",
+    cuisine: "Desserts"
+  }
+];
+
+function getRankClass(index) {
+  if(index === 0) return 'rank-gold';
+  if(index === 1) return 'rank-silver';
+  if(index === 2) return 'rank-bronze';
+  return '';
+}
+
+function renderCards(data) {
+  const container = document.getElementById('results-container');
+  container.innerHTML = '';
+  
+  if (data.length === 0) {
+    container.innerHTML = '<div style="color:#888; text-align:center; padding: 40px;">No results found reflecting your filters.</div>';
+    return;
+  }
+
+  data.forEach((dish, index) => {
+    let rankStr = index < 3 ? \`#\${index + 1}\` : \`\${index + 1}\`;
+    let rankClass = getRankClass(index);
+    let dotClass = dish.isVeg ? 'dot-veg' : 'dot-nonveg';
+    let dotLabel = dish.isVeg ? 'Veg' : 'Non-veg';
+    
+    let adBadge = dish.ad ? \`<div class="ad-badge">Ad</div>\` : '';
+    let cardClass = dish.ad ? 'dish-card ad-card' : 'dish-card';
+
+    let cardHTML = \`
+      <div class="\${cardClass}" data-id="\${dish.id}">
+        \${adBadge}
+        <div class="rank-col \${rankClass}">\${rankStr}</div>
+        <div class="img-placeholder">\${dish.emoji}</div>
+        
+        <div class="card-content">
+          <div class="dish-name">\${dish.name}</div>
+          <div class="rest-name">\${dish.restaurant} — \${dish.area}</div>
+          
+          <div class="meta-row">
+            <span style="color:var(--gold);">★ 4.8</span>
+            <span class="score-badge">\${dish.score} / 10</span>
+            <span>₹\${dish.price}</span>
+            <span><span class="\${dotClass}"></span> \${dotLabel}</span>
+            <span class="tag">\${dish.cuisine}</span>
+            <span class="tag">\${dish.area}</span>
+          </div>
+          
+          <div class="hygiene-container">
+            <span class="hygiene-label">Hygiene</span>
+            <div class="hygiene-track">
+              <div class="hygiene-fill" data-width="\${dish.hygiene}%"></div>
+            </div>
+            <span style="font-size:12px; color:var(--text-secondary);">\${dish.hygiene}%</span>
+          </div>
+
+          <div class="action-row">
+            <button class="btn-action">View menu</button>
+            <button class="btn-action toggle-reviews" data-id="\${dish.id}">Read reviews v</button>
+            <button class="btn-action">Directions</button>
+            <button class="btn-action">Save</button>
+          </div>
+          
+          <!-- Reviews Section -->
+          <div class="reviews-section" id="reviews-\${dish.id}">
+            <div class="reviews-header">
+              <div>
+                <div class="aggregate-score">\${dish.score}</div>
+                <div class="score-max">out of 10</div>
+              </div>
+              <div class="star-bars">
+                <div class="star-bar-row">
+                  <span style="width:10px;">5</span>
+                  <div class="star-track"><div class="star-fill" style="width: 80%;"></div></div>
+                </div>
+                <div class="star-bar-row">
+                  <span style="width:10px;">4</span>
+                  <div class="star-track"><div class="star-fill" style="width: 15%;"></div></div>
+                </div>
+                <div class="star-bar-row">
+                  <span style="width:10px;">3</span>
+                  <div class="star-track"><div class="star-fill" style="width: 5%;"></div></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="review-form">
+              <div class="form-title">Write a review</div>
+              <div class="star-selector">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>☆</span>
+              </div>
+              <div class="form-row">
+                <input type="text" placeholder="Your name" class="form-input">
+                <select class="form-input">
+                  <option>Price is accurate</option>
+                  <option>Price has changed</option>
+                </select>
+              </div>
+              <textarea placeholder="How was the dish? Any special notes?" class="form-input" style="margin-bottom:12px;"></textarea>
+              <button class="btn-action" style="background:var(--primary); color:white; border:none;">Submit Review</button>
+            </div>
+            
+            <div class="review-list">
+              <div class="review-item">
+                <div class="avatar">AM</div>
+                <div class="review-body">
+                  <div class="reviewer-name">Amit R. <span class="review-date">· 2 days ago</span></div>
+                  <div class="review-stars">★★★★★</div>
+                  <div class="review-text">Absolutely incredible. The spices are perfectly balanced and it's served steaming hot. Will definitely come back for more.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    \`;
+    container.innerHTML += cardHTML;
+  });
+
+  // Animate hygiene bars
+  setTimeout(() => {
+    document.querySelectorAll('.hygiene-fill').forEach(bar => {
+      bar.style.width = bar.getAttribute('data-width');
+    });
+  }, 100);
+
+  // Bind review toggles
+  document.querySelectorAll('.toggle-reviews').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = e.target.getAttribute('data-id');
+      const reviewSection = document.getElementById(\`reviews-\${id}\`);
+      reviewSection.classList.toggle('active');
+    });
+  });
+}
+
+// Initial render
+renderCards(dishes);
+
+// Interactions
+
+// Mood pills filling search
+document.querySelectorAll('.mood-pill').forEach(pill => {
+  pill.addEventListener('click', (e) => {
+    document.getElementById('search-input').value = e.target.innerText;
+    triggerSearch();
+  });
+});
+
+// Fake search delay
+const searchBtn = document.getElementById('search-btn');
+const skeletonContainer = document.getElementById('skeleton-container');
+const resultsContainer = document.getElementById('results-container');
+
+function triggerSearch() {
+  searchBtn.innerText = 'Searching...';
+  resultsContainer.style.display = 'none';
+  skeletonContainer.style.display = 'block';
+  
+  setTimeout(() => {
+    searchBtn.innerText = 'Search ↗';
+    skeletonContainer.style.display = 'none';
+    resultsContainer.style.display = 'flex';
+    applyFilters(); // Re-apply current filters to show results
+  }, 800);
+}
+
+searchBtn.addEventListener('click', triggerSearch);
+document.getElementById('search-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') triggerSearch();
+});
+
+// Toggles & Filters
+const vegToggle = document.getElementById('veg-toggle');
+const nonvegToggle = document.getElementById('nonveg-toggle');
+const priceSlider = document.getElementById('price-slider');
+const priceVal = document.getElementById('price-val');
+const areaCheckboxes = document.querySelectorAll('#area-filters input[type="checkbox"]');
+
+vegToggle.addEventListener('click', () => {
+  vegToggle.classList.toggle('active');
+  if(vegToggle.classList.contains('active')) nonvegToggle.classList.remove('active');
+  applyFilters();
+});
+
+nonvegToggle.addEventListener('click', () => {
+  nonvegToggle.classList.toggle('active');
+  if(nonvegToggle.classList.contains('active')) vegToggle.classList.remove('active');
+  applyFilters();
+});
+
+priceSlider.addEventListener('input', (e) => {
+  priceVal.innerText = \`₹\${e.target.value}\`;
+  applyFilters();
+});
+
+areaCheckboxes.forEach(cb => cb.addEventListener('change', applyFilters));
+
+function applyFilters() {
+  let filtered = [...dishes];
+  
+  if (vegToggle.classList.contains('active')) {
+    filtered = filtered.filter(d => d.isVeg);
+  } else if (nonvegToggle.classList.contains('active')) {
+    filtered = filtered.filter(d => !d.isVeg);
+  }
+  
+  let maxPrice = parseInt(priceSlider.value);
+  filtered = filtered.filter(d => d.price <= maxPrice);
+  
+  let selectedAreas = Array.from(areaCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+  if (selectedAreas.length > 0) {
+    filtered = filtered.filter(d => selectedAreas.includes(d.area));
+  }
+  
+  renderCards(filtered);
+}
+
+// Star selector interactive
+document.addEventListener('mouseover', (e) => {
+  if (e.target.parentNode && e.target.parentNode.classList.contains('star-selector') && e.target.tagName === 'SPAN') {
+    let stars = Array.from(e.target.parentNode.children);
+    let idx = stars.indexOf(e.target);
+    stars.forEach((s, i) => {
+      if(i <= idx) s.classList.add('active');
+      else s.classList.remove('active');
+    });
+  }
+});
+document.addEventListener('mouseout', (e) => {
+  if (e.target.parentNode && e.target.parentNode.classList.contains('star-selector')) {
+    let stars = Array.from(e.target.parentNode.children);
+    stars.forEach(s => s.classList.remove('active'));
+  }
+});
+
+</script>
+</body>
+</html>
