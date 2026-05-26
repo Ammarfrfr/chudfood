@@ -5,9 +5,13 @@ const searchSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  results: {
-    type: Array,
-    default: [],
+  filters: {
+    type: Object,
+    default: {},
+  },
+  resultCount: {
+    type: Number,
+    default: 0,
   },
   createdAt: {
     type: Date,

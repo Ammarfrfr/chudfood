@@ -1,16 +1,9 @@
 import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema({
-  dishName: {
-    type: String,
-    required: true,
-  },
-  restaurant: {
-    type: String,
-    required: true,
-  },
-  reviewerName: {
-    type: String,
+  dishId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Dish',
     required: true,
   },
   rating: {
@@ -19,21 +12,21 @@ const reviewSchema = new mongoose.Schema({
     min: 1,
     max: 5,
   },
-  text: {
-    type: String,
-    required: true,
-  },
   hygieneRating: {
     type: Number,
-    required: true,
     min: 1,
     max: 10,
   },
   priceAccuracy: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 10,
+    type: String,
+    enum: ['Cheaper than listed', 'As listed', 'More expensive'],
+  },
+  text: {
+    type: String,
+  },
+  reviewerName: {
+    type: String,
+    default: 'Anonymous',
   },
   date: {
     type: Date,
